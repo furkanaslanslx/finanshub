@@ -1,0 +1,69 @@
+name: hub
+description: "A new Flutter project."
+
+version: 1.1.0+7
+
+environment:
+  sdk: ">=3.4.3 <4.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_native_splash: ^2.4.1
+  cupertino_icons: ^1.0.6
+  http: ^1.2.1
+  provider: ^6.1.2
+  shared_preferences: ^2.2.3
+  shimmer: ^3.0.0
+  cached_network_image: ^3.3.1
+  html_unescape: ^2.0.0
+  intl: ^0.19.0
+  firebase_messaging: ^15.1.2
+  firebase_core: ^3.5.0
+  photo_view: ^0.15.0
+  flutter_colorpicker: ^1.1.0
+  tinycolor2: ^3.0.1
+  firebase_analytics: ^11.3.3
+  webview_flutter: ^4.9.0
+  connectivity_plus: ^6.1.0
+  path_provider: ^2.1.4
+  flutter_zoom_drawer: ^3.2.0
+  get: ^4.6.6
+
+flutter_native_splash:
+  color: "#fd4f46"
+  image: assets/new icons/Finans Hub İkon.png
+  color_dark: "#FD4F46"
+  image_dark: assets/new icons/Finans Hub İkon.png
+  android_12:
+    image: assets/new icons/Finans Hub İkon.png
+    color: "#FD4F46"
+    icon_background_color: "#FD4F46"
+    image_dark: assets/new icons/Finans Hub İkon.png
+    color_dark: "#FD4F46"
+    icon_background_color_dark: "#FD4F46"
+  android: true
+  ios: true
+  web: false
+  android_gravity: center
+  ios_content_mode: scaleAspectFit
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/new icons/Finans Hub İkon.png"
+  adaptive_icon_background: "#FD4F46"
+  adaptive_icon_foreground: "assets/new icons/Finans Hub İkon.png"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/newsphotos/
+    - assets/authorphotos/
+    - assets/new icons/
