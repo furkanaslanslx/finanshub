@@ -7,6 +7,7 @@ import 'package:hub/v/news_view.dart';
 import 'package:hub/vm/all_vms.dart';
 import 'package:hub/vm/themenotifier.dart';
 import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
 
 class NewsWdgt extends StatelessWidget {
   const NewsWdgt({super.key, required this.news, required this.index});
@@ -19,31 +20,27 @@ class NewsWdgt extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(bottom: ResponsiveSize.getWidth(context, 2.5), top: ResponsiveSize.getWidth(context, 2.5)),
-      child: GestureDetector(
-        onTap: () async {
-          await firebaseAnalytics.logEvent(
+      child: OpenContainer(
+        transitionDuration: const Duration(milliseconds: 500),
+        openBuilder: (context, _) {
+          firebaseAnalytics.logEvent(
             name: 'page_view',
             parameters: {
               'page_title': news.header,
             },
           );
           debugPrint('logged: ${news.id}');
-          if (!context.mounted) return;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                // final newsViewModel = NewsViewModel();
-                return NewsView(
-                  item: news,
-                  index: index,
-                  // model: newsViewModel,
-                );
-              },
-            ),
+          return NewsView(
+            item: news,
+            index: index,
           );
         },
-        child: Stack(
+        closedShape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        closedElevation: 0,
+        closedColor: Colors.transparent,
+        closedBuilder: (context, openContainer) => Stack(
           alignment: Alignment.bottomCenter,
           children: [
             if (news.imgUrl.isEmpty)

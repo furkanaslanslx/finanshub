@@ -11,6 +11,7 @@ import 'package:hub/v/main_view.dart';
 import 'package:hub/v/widgets/appbar.dart';
 import 'package:hub/vm/all_vms.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:animations/animations.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key, required this.isFirstLaunch});
@@ -132,14 +133,19 @@ class _NavigationState extends State<Navigation> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ignore: prefer_const_constructors
       appBar: MyAppBar(),
-      // drawer: const CustomDrawer(),
       body: Stack(
         children: [
-          IndexedStack(
-            index: _selectedIndex,
-            children: _widgetOptions,
+          PageTransitionSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation, secondaryAnimation) {
+              return FadeThroughTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                child: child,
+              );
+            },
+            child: _widgetOptions[_selectedIndex],
           ),
           Positioned(
             bottom: 30,

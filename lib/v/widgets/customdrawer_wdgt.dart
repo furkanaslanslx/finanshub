@@ -233,8 +233,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
         return 'Koyu Tema';
       case ThemeMode.system:
         return 'Sistem Teması';
-      default:
-        return 'Sistem Teması';
     }
   }
 }

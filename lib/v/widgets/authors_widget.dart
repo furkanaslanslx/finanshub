@@ -6,6 +6,7 @@ import 'package:hub/v/authordetail_view.dart';
 import 'package:hub/vm/all_vms.dart';
 import 'package:hub/vm/authors_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
 
 class AuthorsListView extends StatefulWidget {
   const AuthorsListView({super.key});
@@ -33,19 +34,18 @@ class _AuthorsListViewState extends State<AuthorsListView> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: viewModel.fetchedUsers!.map((user) {
-                        return GestureDetector(
-                          onTap: () {
-                            if (!mounted) return;
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => AuthordetailView(id: user.id),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: ResponsiveSize.getWidth(context, 18),
-                            margin: const EdgeInsets.all(10.0),
-                            child: Column(
+                        return Container(
+                          width: ResponsiveSize.getWidth(context, 18),
+                          margin: const EdgeInsets.all(10.0),
+                          child: OpenContainer(
+                            transitionDuration: const Duration(milliseconds: 500),
+                            openBuilder: (context, _) => AuthordetailView(id: user.id),
+                            closedShape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(0)),
+                            ),
+                            closedElevation: 0,
+                            closedColor: Colors.transparent,
+                            closedBuilder: (context, openContainer) => Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ClipRRect(
