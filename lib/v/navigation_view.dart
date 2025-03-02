@@ -133,7 +133,7 @@ class _NavigationState extends State<Navigation> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(),
+      appBar: const MyAppBar(),
       body: Stack(
         children: [
           PageTransitionSwitcher(
