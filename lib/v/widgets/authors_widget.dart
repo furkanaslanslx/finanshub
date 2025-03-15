@@ -61,7 +61,17 @@ class _AuthorsListViewState extends State<AuthorsListView> {
                                     errorWidget: (context, url, error) => SizedBox(
                                       height: ResponsiveSize.getWidth(context, 18),
                                       width: ResponsiveSize.getWidth(context, 18),
-                                      child: const Center(child: Icon(Icons.error)),
+                                      child: Center(
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(Radius.circular(30)),
+                                          child: Image.asset(
+                                            'assets/new icons/Finans Hub İkon.png',
+                                            width: ResponsiveSize.getWidth(context, 95),
+                                            height: ResponsiveSize.getWidth(context, 50),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),

@@ -28,8 +28,9 @@ class NewsView extends StatefulWidget {
   State<NewsView> createState() => _NewsViewState();
 }
 
+late PageController _pageController;
+
 class _NewsViewState extends State<NewsView> {
-  late PageController _pageController;
   HtmlUnescape unescape = HtmlUnescape();
 
   @override
@@ -72,13 +73,13 @@ class _NewsViewState extends State<NewsView> {
                 controller: _pageController,
                 physics: const BouncingScrollPhysics(),
                 onPageChanged: (index) async {
-                  await firebaseAnalytics.logEvent(
-                    name: 'read_article',
-                    parameters: {
-                      'article_id': listModel.pagePosts[index].id,
-                    },
-                  );
-                  debugPrint('logged: ${listModel.pagePosts[index].id}');
+                  // await firebaseAnalytics.logEvent(
+                  //   name: 'read_article',
+                  //   parameters: {
+                  //     'article_id': listModel.pagePosts[index].id,
+                  //   },
+                  // );
+                  // debugPrint('logged: ${listModel.pagePosts[index].id}');
                   if (index >= listModel.pagePosts.length - 2 && listModel.hasMorePage && !listModel.isPageLoading) {
                     await listModel.fetchPostsByPage();
                     setState(() {});
@@ -94,6 +95,38 @@ class _NewsViewState extends State<NewsView> {
               );
             }
           },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(width: 36), // Sol tarafta butonun ekran kenarına yapışmasını önler
+            FloatingActionButton(
+              onPressed: () {
+                if (_pageController.hasClients) {
+                  _pageController.previousPage(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+              child: const Icon(Icons.arrow_back),
+            ),
+            const Spacer(),
+            FloatingActionButton(
+              onPressed: () {
+                if (_pageController.hasClients) {
+                  _pageController.nextPage(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+              child: const Icon(Icons.arrow_forward),
+            ),
+            const SizedBox(width: 36), // Sağ tarafta butonun ekran kenarına yapışmasını önler
+          ],
         ),
       ),
     );
@@ -165,7 +198,7 @@ class _NewsPageContentState extends State<NewsPageContent> with AutomaticKeepAli
 
       double screenHeight = MediaQuery.of(context).size.height;
 
-      if (dividerPosition.dy <= screenHeight - kToolbarHeight) {
+      if (dividerPosition.dy <= screenHeight - kToolbarHeight - 80) {
         if (_fabOpacity != 0.0) {
           setState(() => _fabOpacity = 0.0);
         }
@@ -420,7 +453,7 @@ class _NewsPageContentState extends State<NewsPageContent> with AutomaticKeepAli
           ),
         ),
         Positioned(
-          bottom: 36.0,
+          bottom: 116.0,
           right: 36.0,
           child: Opacity(
             opacity: _fabOpacity,
@@ -448,6 +481,39 @@ class _NewsPageContentState extends State<NewsPageContent> with AutomaticKeepAli
             ),
           ),
         ),
+        // Positioned(
+        //   bottom: 36.0,
+        //   right: 36.0,
+        //   left: 36.0,
+        //   child: Row(
+        //     mainAxisSize: MainAxisSize.max,
+        //     children: [
+        //       FloatingActionButton(
+        //         onPressed: () {
+        //           if (_pageController.hasClients) {
+        //             _pageController.previousPage(
+        //               duration: const Duration(milliseconds: 500),
+        //               curve: Curves.easeInOut,
+        //             );
+        //           }
+        //         },
+        //         child: const Icon(Icons.arrow_back),
+        //       ),
+        //       const Spacer(),
+        //       FloatingActionButton(
+        //         onPressed: () {
+        //           if (_pageController.hasClients) {
+        //             _pageController.nextPage(
+        //               duration: const Duration(milliseconds: 500),
+        //               curve: Curves.easeInOut,
+        //             );
+        //           }
+        //         },
+        //         child: const Icon(Icons.arrow_forward),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
