@@ -23,13 +23,13 @@ class NewsWdgt extends StatelessWidget {
       child: OpenContainer(
         transitionDuration: const Duration(milliseconds: 500),
         openBuilder: (context, _) {
-          firebaseAnalytics.logEvent(
-            name: 'page_view',
-            parameters: {
-              'page_title': news.header,
-            },
-          );
-          debugPrint('logged: ${news.id}');
+          // firebaseAnalytics.logEvent(
+          //   name: 'page_view',
+          //   parameters: {
+          //     'page_title': news.header,
+          //   },
+          // );
+          // debugPrint('logged: ${news.id}');
           return NewsView(
             item: news,
             index: index,

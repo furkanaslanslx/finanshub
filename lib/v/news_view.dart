@@ -58,77 +58,82 @@ class _NewsViewState extends State<NewsView> {
         ChangeNotifierProvider<ThemeNotifier>.value(value: themeNotifier),
       ],
       child: Scaffold(
-        appBar: AppBar(
-          title: Image.asset('assets/finanshub.png', height: 50),
-          backgroundColor: themeNotifier.isDarkMode ? Colors.black : themeNotifier.iconColor,
-        ),
-        body: Consumer<ListViewModel>(
-          builder: (context, listModel, child) {
+          appBar: AppBar(
+            title: Image.asset('assets/finanshub.png', height: 50),
+            backgroundColor: themeNotifier.isDarkMode ? Colors.black : themeNotifier.iconColor,
+          ),
+          body: Consumer<ListViewModel>(
+            builder: (context, listModel, child) {
+              if (widget.index == null) {
+                return NewsPageContent(
+                  articleId: widget.item.id,
+                );
+              } else {
+                return PageView.builder(
+                  controller: _pageController,
+                  physics: const BouncingScrollPhysics(),
+                  onPageChanged: (index) async {
+                    // await firebaseAnalytics.logEvent(
+                    //   name: 'read_article',
+                    //   parameters: {
+                    //     'article_id': listModel.pagePosts[index].id,
+                    //   },
+                    // );
+                    // debugPrint('logged: ${listModel.pagePosts[index].id}');
+                    if (index >= listModel.pagePosts.length - 2 && listModel.hasMorePage && !listModel.isPageLoading) {
+                      await listModel.fetchPostsByPage();
+                      setState(() {});
+                    }
+                  },
+                  itemCount: listModel.pagePosts.length,
+                  itemBuilder: (context, index) {
+                    ContentItem article = listModel.pagePosts[index];
+                    return NewsPageContent(
+                      articleId: article.id,
+                    );
+                  },
+                );
+              }
+            },
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: (() {
             if (widget.index == null) {
-              return NewsPageContent(
-                articleId: widget.item.id,
-              );
+              return const SizedBox();
             } else {
-              return PageView.builder(
-                controller: _pageController,
-                physics: const BouncingScrollPhysics(),
-                onPageChanged: (index) async {
-                  // await firebaseAnalytics.logEvent(
-                  //   name: 'read_article',
-                  //   parameters: {
-                  //     'article_id': listModel.pagePosts[index].id,
-                  //   },
-                  // );
-                  // debugPrint('logged: ${listModel.pagePosts[index].id}');
-                  if (index >= listModel.pagePosts.length - 2 && listModel.hasMorePage && !listModel.isPageLoading) {
-                    await listModel.fetchPostsByPage();
-                    setState(() {});
-                  }
-                },
-                itemCount: listModel.pagePosts.length,
-                itemBuilder: (context, index) {
-                  ContentItem article = listModel.pagePosts[index];
-                  return NewsPageContent(
-                    articleId: article.id,
-                  );
-                },
+              return Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(width: 36), // Sol tarafta butonun ekran kenarına yapışmasını önler
+                  FloatingActionButton(
+                    onPressed: () {
+                      if (_pageController.hasClients) {
+                        _pageController.previousPage(
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                    child: const Icon(Icons.arrow_back),
+                  ),
+                  const Spacer(),
+                  FloatingActionButton(
+                    onPressed: () {
+                      if (_pageController.hasClients) {
+                        _pageController.nextPage(
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                    child: const Icon(Icons.arrow_forward),
+                  ),
+                  const SizedBox(width: 36), // Sağ tarafta butonun ekran kenarına yapışmasını önler
+                ],
               );
             }
-          },
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(width: 36), // Sol tarafta butonun ekran kenarına yapışmasını önler
-            FloatingActionButton(
-              onPressed: () {
-                if (_pageController.hasClients) {
-                  _pageController.previousPage(
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              },
-              child: const Icon(Icons.arrow_back),
-            ),
-            const Spacer(),
-            FloatingActionButton(
-              onPressed: () {
-                if (_pageController.hasClients) {
-                  _pageController.nextPage(
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              },
-              child: const Icon(Icons.arrow_forward),
-            ),
-            const SizedBox(width: 36), // Sağ tarafta butonun ekran kenarına yapışmasını önler
-          ],
-        ),
-      ),
+          }())),
     );
   }
 }
@@ -172,7 +177,7 @@ class _NewsPageContentState extends State<NewsPageContent> with AutomaticKeepAli
     model.addListener(_onModelChange);
     model.fetchNewsByID(widget.articleId);
     _scrollController.addListener(_onScroll);
-    _logFirebase();
+    // _logFirebase();
   }
 
   void _logFirebase() async {
